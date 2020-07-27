@@ -83,7 +83,7 @@ html {
     margin-bottom: 3px;
     padding: 10px;
     height: 105px;
-    width: 175px;
+    width: 165px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -92,12 +92,12 @@ html {
 
 .option:hover {
     border-left: 5px solid white;
-    width: 178px;
+    width: 168px;
 }
 
 .option.--is-active {
     border-right: 3px solid red;
-    width: 178px;
+    width: 168px;
     cursor: default;
 }
 
