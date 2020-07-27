@@ -1,4 +1,4 @@
-	 LOADER = document.getElementById('js-loader');
+LOADER = document.getElementById('js-loader');
 
 const TRAY = document.getElementById('js-tray-slide');
 const DRAG_NOTICE = document.getElementById('js-drag-notice');
@@ -12,38 +12,47 @@ var activeOption = 'object001';
 var loaded = false;
 
 const colors = [
-{
-  color: '212121',
-  name: 'Cherry Black'  },
+  {
+    color: '212121',
+    name: 'Cherry Black'
+  },
 
-{
-  color: '282a2a',
-  name: 'Mercury Blue'  },
+  {
+    color: '282a2a',
+    name: 'Mercury Blue'
+  },
 
-{
-  color: '5e5f63',
-  name: 'Sparkling Silver' },
+  {
+    color: '5e5f63',
+    name: 'Sparkling Silver'
+  },
 
-{
-  color: '792224',
-  name: 'Fiery Red' },
+  {
+    color: '792224',
+    name: 'Fiery Red'
+  },
 
-{
-  color: '7b7c7c',
-  name: 'Iron Grey' },
+  {
+    color: '7b7c7c',
+    name: 'Iron Grey'
+  },
 
-{
-  color: 'a5a5a4',
-  name: 'Snow White Pearl' },
-{
-color: '61becb' },
+  {
+    color: 'a5a5a4',
+    name: 'Snow White Pearl'
+  },
+  {
+    color: '61becb'
+  },
 
-{
-color: 'cb304a' },
+  {
+    color: 'cb304a'
+  },
 
-{
-color: 'fc9736' }
-  
+  {
+    color: 'fc9736'
+  }
+
 ];
 
 
@@ -62,10 +71,10 @@ const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.shadowMap.enabled = true;
 renderer.setPixelRatio(window.devicePixelRatio);
-				//renderer.setAnimationLoop( render );
-				//renderer.outputEncoding = THREE.sRGBEncoding;
-				//renderer.toneMapping = THREE.ACESFilmicToneMapping;
-				renderer.toneMappingExposure = 0.45;
+//renderer.setAnimationLoop( render );
+//renderer.outputEncoding = THREE.sRGBEncoding;
+//renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.45;
 
 var cameraFar = 600;
 
@@ -78,10 +87,10 @@ camera.position.z = cameraFar;
 camera.position.x = 0;
 
 // Initial material
-const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0x572364 , shininess: 10 });
+const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0x572364, shininess: 10 });
 
 const INITIAL_MAP = [
-{ childID: "object001", mtl: INITIAL_MTL }];
+  { childID: "object001", mtl: INITIAL_MTL }];
 
 
 // Init the object loader
@@ -148,7 +157,8 @@ scene.add(dirLight);
 var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 1, 1);
 var floorMaterial = new THREE.MeshPhongMaterial({
   color: 0xeeeeee,
-  shininess: 0 });
+  shininess: 0
+});
 
 
 var floor = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -210,11 +220,9 @@ function buildColors(colors) {
     let swatch = document.createElement('div');
     swatch.classList.add('tray__swatch');
 
-    if (color.texture)
-    {
+    if (color.texture) {
       swatch.style.backgroundImage = "url(" + color.texture + ")";
-    } else
-    {
+    } else {
       swatch.style.background = "#" + color.color;
     }
 
@@ -237,7 +245,7 @@ function selectOption(e) {
   activeOption = e.target.dataset.option;
   for (const otherOption of options) {
     otherOption.classList.remove('--is-active');
-  }  
+  }
   console.info('activeOption: ' + activeOption)
   option.classList.add('--is-active');
 }
@@ -263,14 +271,14 @@ function selectSwatch(e) {
 
     new_mtl = new THREE.MeshPhongMaterial({
       map: txt,
-      shininess: color.shininess ? color.shininess : 10 });
+      shininess: color.shininess ? color.shininess : 10
+    });
 
-  } else
-
-  {
+  } else {
     new_mtl = new THREE.MeshPhongMaterial({
       color: parseInt('0x' + color.color),
-      shininess: color.shininess ? color.shininess : 10 });
+      shininess: color.shininess ? color.shininess : 10
+    });
 
 
   }
@@ -280,34 +288,34 @@ function selectSwatch(e) {
 }
 
 function setMaterial(parent, type, mtl) {
-		        console.log('-----------------------------begin-----------------------------')
+  console.log('-----------------------------begin-----------------------------')
 
   parent.traverse(o => {
-	  
-	    /*if(o.nameID != null){
-			console.log('   <<< o.isMesh: ' + o.isMesh)
-			console.log('   <<< o.nameID: ' + o.nameID)
-			console.log('   <<< type: ' + type)
-			if (o.nameID == type) {
-			console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Se asigna material')
-			console.log('   o.isMesh: ' + o.isMesh)
-			console.log('   o.nameID: ' + o.nameID)
-			console.log('   type: ' + type)
-			o.material = mtl;
-		  }else{
-			console.log('<' + o.nameID  + '>,' + '<' + type + '>')
-		  }
-		}*/
-		
-		
+
+    /*if(o.nameID != null){
+    console.log('   <<< o.isMesh: ' + o.isMesh)
+    console.log('   <<< o.nameID: ' + o.nameID)
+    console.log('   <<< type: ' + type)
+    if (o.nameID == type) {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Se asigna material')
+    console.log('   o.isMesh: ' + o.isMesh)
+    console.log('   o.nameID: ' + o.nameID)
+    console.log('   type: ' + type)
+    o.material = mtl;
+    }else{
+    console.log('<' + o.nameID  + '>,' + '<' + type + '>')
+    }
+  }*/
+
+
     if (o.isMesh && o.nameID != null) {
       if (o.nameID == type) {
-		  o.material = mtl;
-	  }
+        o.material = mtl;
+      }
     }
   });
-  
-  		        console.log('-----------------------------end-----------------------------')
+
+  console.log('-----------------------------end-----------------------------')
 
 }
 
@@ -323,15 +331,15 @@ function initialRotation() {
   }
 }
 
-var slider = document.getElementById('js-tray'),sliderItems = document.getElementById('js-tray-slide'),difference;
+var slider = document.getElementById('js-tray'), sliderItems = document.getElementById('js-tray-slide'), difference;
 
 function slide(wrapper, items) {
   var posX1 = 0,
-  posX2 = 0,
-  posInitial,
-  threshold = 20,
-  posFinal,
-  slides = items.getElementsByClassName('tray__swatch');
+    posX2 = 0,
+    posInitial,
+    threshold = 20,
+    posFinal,
+    slides = items.getElementsByClassName('tray__swatch');
 
   // Mouse events
   items.onmousedown = dragStart;
