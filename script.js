@@ -91,7 +91,13 @@ const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0x572364, shininess: 10
 
 const INITIAL_MAP = [
   { childID: "object001", mtl: INITIAL_MTL },
+  { childID: "wheel001_rim_0", mtl: INITIAL_MTL },//llantas
+  { childID: "wheel002_rim_0", mtl: INITIAL_MTL },
+  { childID: "wheel005_rim_0", mtl: INITIAL_MTL },
   { childID: "wheel007_rim_0", mtl: INITIAL_MTL },
+  { childID: "wheel000", mtl: INITIAL_MTL },//Caliper
+  { childID: "wheel003", mtl: INITIAL_MTL },
+  { childID: "wheel004", mtl: INITIAL_MTL },
   { childID: "wheel006", mtl: INITIAL_MTL }
 ];
 
@@ -312,7 +318,9 @@ function setMaterial(parent, type, mtl) {
 
 
     if (o.isMesh && o.nameID != null) {
-      if (o.nameID == type) {
+      if (o.nameID == type || 
+        (type == 'rim' && o.nameID.includes('rim')) ||
+        (type == 'wheel' && o.nameID.startsWith('wheel')  && !o.nameID.includes('rim'))){
         o.material = mtl;
       }
     }
