@@ -82,8 +82,8 @@ html {
     background-color: white;
     margin-bottom: 3px;
     padding: 10px;
-    height: 55px;
-    width: 55px;
+    height: 105px;
+    width: 175px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -92,12 +92,12 @@ html {
 
 .option:hover {
     border-left: 5px solid white;
-    width: 58px;
+    width: 178px;
 }
 
 .option.--is-active {
     border-right: 3px solid red;
-    width: 58px;
+    width: 178px;
     cursor: default;
 }
 

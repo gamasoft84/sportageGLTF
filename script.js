@@ -90,7 +90,10 @@ camera.position.x = 0;
 const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0x572364, shininess: 10 });
 
 const INITIAL_MAP = [
-  { childID: "object001", mtl: INITIAL_MTL }];
+  { childID: "object001", mtl: INITIAL_MTL },
+  { childID: "wheel007_rim_0", mtl: INITIAL_MTL },
+  { childID: "wheel006", mtl: INITIAL_MTL }
+];
 
 
 // Init the object loader
