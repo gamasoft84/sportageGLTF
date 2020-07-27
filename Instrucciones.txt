@@ -1,0 +1,25 @@
+Importar model GLTF a blender
+C:\xampp\htdocs\sportageGLTF\modeloOriginal\gltf
+(escala normal)
+
+Exportar el modelo en formato .GLB
+----------------------------------
+C:\xampp\htdocs\sportageGLTF
+
+
+Guardar
+SportageBlend_GLTF_GLB.blend
+
+
+Obtener el nombre de las mayas (mesh)
+https://www.creators3d.com/online-viewer
+
+
+Modelo gltf
+-----------
+object001_Material006_0
+
+
+
+
+
