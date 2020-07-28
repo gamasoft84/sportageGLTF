@@ -245,10 +245,10 @@ function selectOption(e) {
 const swatches = document.querySelectorAll(".tray__swatch");
 
 for (const swatch of swatches) {
-  swatch.addEventListener('click', selectSwatch);
+  swatch.addEventListener('click', selectCarColor);
 }
 
-function selectSwatch(e) {
+function selectCarColor(e) {
   let color = colors[parseInt(e.target.dataset.key)];
   let new_mtl;
 
@@ -256,31 +256,27 @@ function selectSwatch(e) {
 
     let txt = new THREE.TextureLoader().load(color.texture);
 
-    txt.repeat.set(color.size[0], color.size[1], color.size[2]);
+    txt.repeat.set(color.size[2], color.size[2], color.size[2]);
     txt.wrapS = THREE.RepeatWrapping;
     txt.wrapT = THREE.RepeatWrapping;
 
     new_mtl = new THREE.MeshPhongMaterial({
       map: txt,
-      shininess: color.shininess ? color.shininess : 10
+      shininess: color.shininess ? color.shininess : 30
     });
 
   } else {
     new_mtl = new THREE.MeshPhongMaterial({
       color: parseInt('0x' + color.color),
-      shininess: color.shininess ? color.shininess : 10
+      shininess: color.shininess ? color.shininess : 30
     });
-
-
   }
 
-  console.log('activeOption: ' + activeOption + ' ' + color.color)
+  //console.log('activeOption: ' + activeOption + ' ' + color.color)
   setMaterial(modelCar, activeOption, new_mtl);
 }
 
 function setMaterial(parent, type, mtl) {
-  console.log('-----------------------------begin-----------------------------')
-
   parent.traverse(o => {
 
     /*if(o.nameID != null){
@@ -307,10 +303,8 @@ function setMaterial(parent, type, mtl) {
       }
     }
   });
-
-  console.log('-----------------------------end-----------------------------')
-
 }
+
 
 // Function - Opening rotate
 let initRotate = 0;
@@ -387,7 +381,7 @@ function slide(wrapper, items) {
     document.onmouseup = null;
     document.onmousemove = null;
   }
-
 }
+
 
 slide(slider, sliderItems);
