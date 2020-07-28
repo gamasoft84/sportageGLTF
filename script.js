@@ -3,7 +3,7 @@ LOADER = document.getElementById('js-loader');
 const TRAY = document.getElementById('js-tray-slide');
 const DRAG_NOTICE = document.getElementById('js-drag-notice');
 
-var theModel;
+var modelCar;
 
 const MODEL_PATH = "sportage.glb";
 
@@ -28,8 +28,8 @@ const colors = [
   },
 
   {
-    color: '792224',
-    name: 'Fiery Red'
+    color: 'ba1c1c',
+    name: 'Fiery Red 792224'
   },
 
   {
@@ -42,17 +42,8 @@ const colors = [
     name: 'Snow White Pearl a5a5a4'
   },
   {
-    color: '61becb'
-  },
-
-  {
-    color: 'ba1c1c'
-  },
-
-  {
     color: 'fc9736'
   }
-
 ];
 
 
@@ -100,9 +91,9 @@ const INITIAL_MAP = [
 var loader = new THREE.GLTFLoader();
 
 loader.load(MODEL_PATH, function (gltf) {
-  theModel = gltf.scene;
+  modelCar = gltf.scene;
 
-  theModel.traverse(o => {
+  modelCar.traverse(o => {
     if (o.isMesh) {
       o.castShadow = true;
       o.receiveShadow = true;
@@ -110,19 +101,19 @@ loader.load(MODEL_PATH, function (gltf) {
   });
 
   // Set the models initial scale   
-  theModel.scale.set(2, 2, 2);
-  theModel.rotation.y = Math.PI;
+  modelCar.scale.set(2, 2, 2);
+  modelCar.rotation.y = Math.PI;
 
   // Offset the y position a bit
-  theModel.position.y = -1;
+  modelCar.position.y = -1;
 
   // Set initial textures
   for (let object of INITIAL_MAP) {
-    initColor(theModel, object.childID, object.mtl);
+    initColor(modelCar, object.childID, object.mtl);
   }
 
   // Add the model to the scene
-  scene.add(theModel);
+  scene.add(modelCar);
 
   // Remove the loader
   LOADER.remove();
@@ -192,7 +183,7 @@ function animate() {
     camera.updateProjectionMatrix();
   }
 
-  if (theModel != null && loaded == false) {
+  if (modelCar != null && loaded == false) {
     initialRotation();
     DRAG_NOTICE.classList.add('start');
   }
@@ -287,7 +278,7 @@ function selectSwatch(e) {
   }
 
   console.log('activeOption: ' + activeOption + ' ' + color.color)
-  setMaterial(theModel, activeOption, new_mtl);
+  setMaterial(modelCar, activeOption, new_mtl);
 }
 
 function setMaterial(parent, type, mtl) {
@@ -330,7 +321,7 @@ let initRotate = 0;
 function initialRotation() {
   initRotate++;
   if (initRotate <= 120) {
-    theModel.rotation.y += Math.PI / 60;
+    modelCar.rotation.y += Math.PI / 60;
   } else {
     loaded = true;
   }
