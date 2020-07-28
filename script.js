@@ -127,8 +127,12 @@ function initColor(parent, type, mtl) {
   parent.traverse(o => {
     if (o.isMesh) {
       if (o.name.includes(type)) {
-        o.material = mtl;
+        console.log('                       <<<<' + o.name + '>>>>' )
+        //console.log(o)
+       // o.material = mtl;
         o.nameID = type; // Set a new property to identify this object
+      }else{
+        //console.log('<' + o.name + '>' )
       }
     }
   });
