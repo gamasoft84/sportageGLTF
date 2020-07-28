@@ -140,30 +140,25 @@ function initColor(parent, type, mtl) {
 
 // Add lights
 var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.61);
-hemiLight.position.set(50, 50, 0);
+hemiLight.position.set(10, 10, 0);
 // Add hemisphere light to scene   
 scene.add(hemiLight);
 
 var dirLight = new THREE.DirectionalLight(0xffffff, 0.54);
-dirLight.position.set(-8, 12, 8);
-dirLight.castShadow = true;
+dirLight.position.set(10, 0, 0);
+dirLight.castShadow = false;
 dirLight.shadow.mapSize = new THREE.Vector2(1024, 1024);
 // Add directional Light to scene    
 scene.add(dirLight);
 
-// Floor
-var floorGeometry = new THREE.PlaneGeometry(5000, 5000, 1, 1);
-var floorMaterial = new THREE.MeshPhongMaterial({
-  color: 0xeeeeee,
-  shininess: 0
-});
 
+var dirLight2 = new THREE.DirectionalLight(0xffffff, 0.54);
+dirLight2.position.set(-10, 10, 10);
+dirLight2.castShadow = false;
+dirLight2.shadow.mapSize = new THREE.Vector2(1024, 1024);
+// Add directional Light to scene    
+scene.add(dirLight);
 
-var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-floor.rotation.x = -0.5 * Math.PI;
-floor.receiveShadow = true;
-floor.position.y = -1;
-//scene.add(floor);
 
 // Add controls
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
