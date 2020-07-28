@@ -167,8 +167,8 @@ var controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.dampingFactor = 0.1;
-controls.autoRotate = false; // Toggle this if you'd like the chair to automatically rotate
-controls.autoRotateSpeed = 0.2; // 30
+controls.autoRotate = true; // Toggle this if you'd like the model to automatically rotate
+controls.autoRotateSpeed = 1; // 30
 
 function animate() {
 
