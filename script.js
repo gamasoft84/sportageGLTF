@@ -58,29 +58,23 @@ const colors = [
 
 
 
-const BACKGROUND_COLOR = 0xf1f1f1;
+const BACKGROUND_COLOR = 0xffffff;
 // Init the scene
 const scene = new THREE.Scene();
 // Set background
 scene.background = new THREE.Color(BACKGROUND_COLOR);
-//scene.fog = new THREE.Fog(BACKGROUND_COLOR, 20, 100);
+scene.fog = new THREE.Fog(BACKGROUND_COLOR, 1, 4000);
 
 const canvas = document.querySelector('#c');
 
 // Init the renderer
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.shadowMap.enabled = true;
-renderer.setPixelRatio(window.devicePixelRatio);
-//renderer.setAnimationLoop( render );
-//renderer.outputEncoding = THREE.sRGBEncoding;
-//renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.45;
-
-var cameraFar = 600;
-
+renderer.toneMappingExposure = 0.99;
 document.body.appendChild(renderer.domElement);
 
 // Add a camerra
+var cameraFar = 600;
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
 //camera.position.set( 250, 250, - 50 );
 camera.position.z = cameraFar;
