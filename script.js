@@ -162,8 +162,8 @@ scene.add(dirLight);
 
 // Add controls
 var controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.maxPolarAngle = Math.PI / 2;
-controls.minPolarAngle = Math.PI / 3;
+//controls.maxPolarAngle = Math.PI / 2;
+//controls.minPolarAngle = Math.PI / 3;
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.dampingFactor = 0.1;
