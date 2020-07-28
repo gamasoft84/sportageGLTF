@@ -38,15 +38,15 @@ const colors = [
   },
 
   {
-    color: 'a5a5a4',
-    name: 'Snow White Pearl'
+    color: 'ffffff',
+    name: 'Snow White Pearl a5a5a4'
   },
   {
     color: '61becb'
   },
 
   {
-    color: 'cb304a'
+    color: 'ba1c1c'
   },
 
   {
@@ -81,6 +81,7 @@ camera.position.set( -600, -100, 400 );
 
 // Initial material
 const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 30 });
+const INITIAL_CALIPER_MTL = new THREE.MeshPhongMaterial({ color: 0xba1c1c, shininess: 30 });
 
 const INITIAL_MAP = [
   { childID: "object001", mtl: INITIAL_MTL },//body
@@ -88,10 +89,10 @@ const INITIAL_MAP = [
   { childID: "wheel002_rim_0", mtl: INITIAL_MTL },
   { childID: "wheel005_rim_0", mtl: INITIAL_MTL },
   { childID: "wheel007_rim_0", mtl: INITIAL_MTL },
-  { childID: "wheel000", mtl: INITIAL_MTL },//Caliper
-  { childID: "wheel003", mtl: INITIAL_MTL },
-  { childID: "wheel004", mtl: INITIAL_MTL },
-  { childID: "wheel006", mtl: INITIAL_MTL }
+  { childID: "wheel000", mtl: INITIAL_CALIPER_MTL },//Caliper
+  { childID: "wheel003", mtl: INITIAL_CALIPER_MTL },
+  { childID: "wheel004", mtl: INITIAL_CALIPER_MTL },
+  { childID: "wheel006", mtl: INITIAL_CALIPER_MTL }
 ];
 
 
