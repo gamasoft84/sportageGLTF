@@ -133,7 +133,7 @@ html {
     display: flex;
     left: 0;
     transform: translateX(-50%);
-    animation: wheelin 1s 2s ease-in-out forwards; 
+    animation: wheelin 1s 2.5s ease-in-out forwards;
 }
 
 .tray__swatch {
@@ -144,10 +144,12 @@ html {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     background-size: cover;
     background-position: center;
+    border-radius: 100%;
+    margin-bottom: 20px;
 }
 
-.tray__swatch:nth-child(5n+5) {
-    margin-right: 20px;
+.tray__swatch:nth-child(n+1) {
+    margin-right: 10px;
 }
 
 .drag-notice {

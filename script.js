@@ -11,38 +11,36 @@ var activeOption = 'object001';
 
 var loaded = false;
 
-const colors = [
+const colors = [ 
   {
-    color: '212121',
-    name: 'Cherry Black'
-  },
-
-  {
-    color: '282a2a',
-    name: 'Mercury Blue'
-  },
-
-  {
-    color: '5e5f63',
-    name: 'Sparkling Silver'
-  },
-
-  {
-    color: 'ba1c1c',
-    name: 'Fiery Red 792224'
-  },
-
-  {
-    color: '7b7c7c',
-    name: 'Iron Grey'
-  },
-
-  {
-    color: 'ffffff',
-    name: 'Snow White Pearl a5a5a4'
+    texture: './texture/ironGrey.gif',
+    size: [2, 2, 2],
+    shininess: 60 
   },
   {
-    color: 'fc9736'
+    texture: './texture/fieryRed.gif',
+    size: [2, 2, 2],
+    shininess: 60 
+  },
+  {
+    texture: './texture/sparklingSilver.gif',
+    size: [2, 2, 2],
+    shininess: 60 
+  },
+  {
+    texture: './texture/snowWhitePearl.gif',
+    size: [2, 2, 2],
+    shininess: 60 
+  },  
+  {
+    texture: './texture/mercuryBlue.gif',
+    size: [2, 2, 2],
+    shininess: 60 
+  },
+  {
+    texture: './texture/cherryBlack.gif',
+    size: [2, 2, 2],
+    shininess: 60 
   }
 ];
 
