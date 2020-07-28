@@ -80,11 +80,11 @@ camera.position.set( -600, -100, 400 );
 
 
 // Initial material
-const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0x572364, shininess: 10 });
+const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 30 });
 
 const INITIAL_MAP = [
-  { childID: "object001", mtl: INITIAL_MTL },
-  { childID: "wheel001_rim_0", mtl: INITIAL_MTL },//llantas
+  { childID: "object001", mtl: INITIAL_MTL },//body
+  { childID: "wheel001_rim_0", mtl: INITIAL_MTL },//whell
   { childID: "wheel002_rim_0", mtl: INITIAL_MTL },
   { childID: "wheel005_rim_0", mtl: INITIAL_MTL },
   { childID: "wheel007_rim_0", mtl: INITIAL_MTL },
