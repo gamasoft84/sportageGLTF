@@ -76,9 +76,8 @@ document.body.appendChild(renderer.domElement);
 // Add a camerra
 var cameraFar = 600;
 var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-//camera.position.set( 250, 250, - 50 );
-camera.position.z = cameraFar;
-camera.position.x = 0;
+camera.position.set( -600, -100, 400 );
+
 
 // Initial material
 const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0x572364, shininess: 10 });
