@@ -148,7 +148,7 @@
         // Init the renderer
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
         renderer.shadowMap.enabled = true;
-        renderer.toneMappingExposure = 0.65;
+        renderer.toneMappingExposure = 0.1;
         document.body.appendChild(renderer.domElement);
 
 
@@ -186,32 +186,36 @@
         var loader = new GLTFLoader();
 
         loader.load(MODEL_PATH, function (gltf) {
-        modelCar = gltf.scene;
+            modelCar = gltf.scene;
 
-        modelCar.traverse(o => {
-            if (o.isMesh) {
-            o.castShadow = true;
-            o.receiveShadow = true;
+            modelCar.traverse(o => {
+                if (o.isMesh) {
+                    o.castShadow = true;
+                    o.receiveShadow = true;
+                }
+            });
+
+            // Set the models initial scale   
+            modelCar.scale.set(2, 2, 2);
+            modelCar.rotation.y = Math.PI;
+
+            // Offset the y position a bit
+            modelCar.position.y = -1;
+
+            // Set initial textures
+            for (let object of INITIAL_MAP) {
+                initColor(modelCar, object.childID, object.mtl);
             }
-        });
 
-        // Set the models initial scale   
-        modelCar.scale.set(2, 2, 2);
-        modelCar.rotation.y = Math.PI;
+            //Delete wheell
+            removePart(modelCar, 'wheel007');
+           
 
-        // Offset the y position a bit
-        modelCar.position.y = -1;
+            // Add the model to the scene
+            scene.add(modelCar);
 
-        // Set initial textures
-        for (let object of INITIAL_MAP) {
-            initColor(modelCar, object.childID, object.mtl);
-        }
-
-        // Add the model to the scene
-        scene.add(modelCar);
-
-        // Remove the loader
-        LOADER.remove();
+            // Remove the loader
+            LOADER.remove();
 
         }, undefined, function (error) {
         console.error(error);
@@ -219,19 +223,31 @@
 
         // Function - Add the textures to the models
         function initColor(parent, type, mtl) {
-        parent.traverse(o => {
-            if (o.isMesh) {
-            if (o.name.includes(type)) {
-                console.log('                       <<<<' + o.name + '>>>>' )
-                //console.log(o)
-                o.material = mtl;
-                o.nameID = type; // Set a new property to identify this object
-            }else{
-                //console.log('<' + o.name + '>' )
-            }
-            }
-        });
+            parent.traverse(o => {
+                if (o.isMesh) {
+                if (o.name.includes(type)) {
+                    console.log('                       <<<<' + o.name + '>>>>' )
+                    //console.log(o)
+                    o.material = mtl;
+                    o.nameID = type; // Set a new property to identify this object
+                }else{
+                    //console.log('<' + o.name + '>' )
+                }
+                }
+            });
         }
+
+
+        // Function - remove the textures to the models
+        function removePart(parent, part) {
+            parent.traverse(o => {
+                if (o.isMesh && o.name.includes(part)) {
+                    o.visible = false;
+                }
+            });
+        }
+
+
 
         // Add lights
         var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.61);
