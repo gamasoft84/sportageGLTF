@@ -1,4 +1,4 @@
-LOADER = document.getElementById('js-loader');
+const LOADER = document.getElementById('js-loader');
 
 const TRAY = document.getElementById('js-tray-slide');
 const DRAG_NOTICE = document.getElementById('js-drag-notice');
@@ -86,7 +86,7 @@ const INITIAL_MAP = [
 
 
 // Init the object loader
-var loader = new THREE.GLTFLoader();
+var loader = new GLTFLoader();
 
 loader.load(MODEL_PATH, function (gltf) {
   modelCar = gltf.scene;
@@ -159,7 +159,7 @@ scene.add(dirLight);
 
 
 // Add controls
-var controls = new THREE.OrbitControls(camera, renderer.domElement);
+var controls = new OrbitControls(camera, renderer.domElement);
 //controls.maxPolarAngle = Math.PI / 2;
 //controls.minPolarAngle = Math.PI / 3;
 controls.enableDamping = true;
