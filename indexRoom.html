@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>3D Model Color Customizer App | Codrops</title>
+    <meta name="description"
+        content="Demo for the tutorial on how to build a 3d model color customizer app with Three.js." />
+    <meta name="keywords" content="three.js, color customizer, app, tutorial, 3d model, blender, javascript" />
+    <meta name="author" content="Kyle Wetton for Codrops" />
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <!-- We add the loader CSS here so that assets don't pop in before the bundled CSS is loaded -->
+    <style>
+        .loading {
+            position: fixed;
+            z-index: 50;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: #faeeee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader {
+            background:url('./img/cargando.gif') no-repeat;
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- The loading element overlays all else until the model is loaded, at which point we remove this element from the DOM -->
+    <div class="loading" id="js-loader">
+        <div class="loader"></div>
+    </div>
+    <!-- Just a quick notice to the user that it can be interacted with -->
+    <span class="drag-notice" id="js-drag-notice">Drag to Rotate 360&#176;</span>
+    <!-- These toggle the the different parts of the chair that can be edited, note data-option is the key that links to the name of the part in the 3D file -->
+    <div class="options">
+        <div class="option  --is-active" data-option="object001">
+            <img src="./img/car_color.png" alt="" />
+        </div>
+        <div class="option" data-option="rim">
+            <img src="./img/rin_19.png" alt="" />
+        </div>
+        <div class="option" data-option="wheel">
+            <img src="./img/caliper.png" alt="" />
+        </div>
+    </div>
+    <!-- The canvas element is used to draw the 3D scene -->
+    <canvas id="c"></canvas>
+    <div class="controls">
+        <div class="info">
+            <div class="info__message">
+                <p><strong>&nbsp;Grab&nbsp;</strong> to rotate KIA Sportage. <strong>&nbsp;Scroll&nbsp;</strong> to
+                    zoom. <strong>&nbsp;Drag&nbsp;</strong> swatches to view more.</p>
+            </div>
+        </div>
+        <!-- This tray will be filled with colors via JS, and the ability to slide this panel will be added in with a lightweight slider script (no dependency used for this) -->
+        <div id="js-tray" class="tray">
+            <div id="js-tray-slide" class="tray__slide"></div>
+        </div>
+    </div>
+
+
+    <script type="module" defer>
+
+        import * as THREE from './js/model3D/three.module.js';
+        import { OrbitControls } from './js/model3D/OrbitControls.js';
+        import { RoomEnvironment } from './js/model3D/RoomEnvironment.js';
+
+        import { GLTFLoader } from './js/model3D/GLTFLoader.js';
+        import { DRACOLoader } from './js/model3D/DRACOLoader.js';
+
+        const LOADER = document.getElementById('js-loader');
+
+        const TRAY = document.getElementById('js-tray-slide');
+        const DRAG_NOTICE = document.getElementById('js-drag-notice');
+
+        var modelCar;
+
+        const MODEL_PATH = "sportage.glb";
+
+        var activeOption = 'object001';
+
+        var loaded = false;
+
+        const colors = [ 
+        {
+            texture: './texture/ironGrey.gif',
+            size: [2, 2, 2],
+            shininess: 60 
+        },
+        {
+            texture: './texture/fieryRed.gif',
+            size: [2, 2, 2],
+            shininess: 60 
+        },
+        {
+            texture: './texture/sparklingSilver.gif',
+            size: [2, 2, 2],
+            shininess: 60 
+        },
+        {
+            texture: './texture/snowWhitePearl.gif',
+            size: [2, 2, 2],
+            shininess: 60 
+        },  
+        {
+            texture: './texture/mercuryBlue.gif',
+            size: [2, 2, 2],
+            shininess: 60 
+        },
+        {
+            texture: './texture/cherryBlack.gif',
+            size: [2, 2, 2],
+            shininess: 60 
+        }
+        ];
+
+
+
+
+        const BACKGROUND_COLOR = 0xffffff;
+        // Init the scene
+        const scene = new THREE.Scene();
+        // Set background
+        scene.background = new THREE.Color(BACKGROUND_COLOR);
+        scene.fog = new THREE.Fog(BACKGROUND_COLOR, 1, 4000);
+
+
+
+        const canvas = document.querySelector('#c');
+
+        // Init the renderer
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.shadowMap.enabled = true;
+        renderer.toneMappingExposure = 0.99;
+        document.body.appendChild(renderer.domElement);
+
+
+        //Enviroment
+        var environment = new RoomEnvironment();
+        var pmremGenerator = new THREE.PMREMGenerator( renderer );
+        scene.environment = pmremGenerator.fromScene( environment ).texture;
+
+
+        // Add a camerra
+        var cameraFar = 600;
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.set( -600, -100, 400 );
+
+
+        // Initial material
+        const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 30 });
+        const INITIAL_CALIPER_MTL = new THREE.MeshPhongMaterial({ color: 0xba1c1c, shininess: 30 });
+
+        const INITIAL_MAP = [
+        { childID: "object001", mtl: INITIAL_MTL },//body
+        { childID: "wheel001_rim_0", mtl: INITIAL_MTL },//whell
+        { childID: "wheel002_rim_0", mtl: INITIAL_MTL },
+        { childID: "wheel005_rim_0", mtl: INITIAL_MTL },
+        { childID: "wheel007_rim_0", mtl: INITIAL_MTL },
+        { childID: "wheel000", mtl: INITIAL_CALIPER_MTL },//Caliper
+        { childID: "wheel003", mtl: INITIAL_CALIPER_MTL },
+        { childID: "wheel004", mtl: INITIAL_CALIPER_MTL },
+        { childID: "wheel006", mtl: INITIAL_CALIPER_MTL }
+        ];
+
+
+        // Init the object loader
+        var loader = new GLTFLoader();
+
+        loader.load(MODEL_PATH, function (gltf) {
+        modelCar = gltf.scene;
+
+        modelCar.traverse(o => {
+            if (o.isMesh) {
+            o.castShadow = true;
+            o.receiveShadow = true;
+            }
+        });
+
+        // Set the models initial scale   
+        modelCar.scale.set(2, 2, 2);
+        modelCar.rotation.y = Math.PI;
+
+        // Offset the y position a bit
+        modelCar.position.y = -1;
+
+        // Set initial textures
+        for (let object of INITIAL_MAP) {
+            initColor(modelCar, object.childID, object.mtl);
+        }
+
+        // Add the model to the scene
+        scene.add(modelCar);
+
+        // Remove the loader
+        LOADER.remove();
+
+        }, undefined, function (error) {
+        console.error(error);
+        });
+
+        // Function - Add the textures to the models
+        function initColor(parent, type, mtl) {
+        parent.traverse(o => {
+            if (o.isMesh) {
+            if (o.name.includes(type)) {
+                console.log('                       <<<<' + o.name + '>>>>' )
+                //console.log(o)
+            // o.material = mtl;
+                o.nameID = type; // Set a new property to identify this object
+            }else{
+                //console.log('<' + o.name + '>' )
+            }
+            }
+        });
+        }
+
+        // Add lights
+        var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.61);
+        hemiLight.position.set(10, 10, 0);
+        // Add hemisphere light to scene   
+        scene.add(hemiLight);
+
+        var dirLight = new THREE.DirectionalLight(0xffffff, 0.54);
+        dirLight.position.set(10, 0, 0);
+        dirLight.castShadow = false;
+        dirLight.shadow.mapSize = new THREE.Vector2(1024, 1024);
+        // Add directional Light to scene    
+        scene.add(dirLight);
+
+
+        var dirLight2 = new THREE.DirectionalLight(0xffffff, 0.54);
+        dirLight2.position.set(-10, 10, 10);
+        dirLight2.castShadow = false;
+        dirLight2.shadow.mapSize = new THREE.Vector2(1024, 1024);
+        // Add directional Light to scene    
+        scene.add(dirLight);
+
+
+        // Add controls
+        var controls = new OrbitControls(camera, renderer.domElement);
+        //controls.maxPolarAngle = Math.PI / 2;
+        //controls.minPolarAngle = Math.PI / 3;
+        controls.enableDamping = true;
+        controls.enablePan = false;
+        controls.dampingFactor = 0.1;
+        controls.autoRotate = true; // Toggle this if you'd like the model to automatically rotate
+        controls.autoRotateSpeed = 1; // 30
+
+        function animate() {
+
+        controls.update();
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+
+        if (resizeRendererToDisplaySize(renderer)) {
+            const canvas = renderer.domElement;
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera.updateProjectionMatrix();
+        }
+
+        if (modelCar != null && loaded == false) {
+            initialRotation();
+            DRAG_NOTICE.classList.add('start');
+        }
+        }
+
+        animate();
+
+        // Function - New resizing method
+        function resizeRendererToDisplaySize(renderer) {
+        const canvas = renderer.domElement;
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        var canvasPixelWidth = canvas.width / window.devicePixelRatio;
+        var canvasPixelHeight = canvas.height / window.devicePixelRatio;
+
+        const needResize = canvasPixelWidth !== width || canvasPixelHeight !== height;
+        if (needResize) {
+
+            renderer.setSize(width, height, false);
+        }
+        return needResize;
+        }
+
+        // Function - Build Colors
+
+        function buildColors(colors) {
+        for (let [i, color] of colors.entries()) {
+            let swatch = document.createElement('div');
+            swatch.classList.add('tray__swatch');
+
+            if (color.texture) {
+            swatch.style.backgroundImage = "url(" + color.texture + ")";
+            } else {
+            swatch.style.background = "#" + color.color;
+            }
+
+            swatch.setAttribute('data-key', i);
+            TRAY.append(swatch);
+        }
+        }
+
+        buildColors(colors);
+
+        // Select Option
+        const options = document.querySelectorAll(".option");
+
+        for (const option of options) {
+        option.addEventListener('click', selectOption);
+        }
+
+        function selectOption(e) {
+        let option = e.target;
+        activeOption = e.target.dataset.option;
+        for (const otherOption of options) {
+            otherOption.classList.remove('--is-active');
+        }
+        console.info('activeOption: ' + activeOption)
+        option.classList.add('--is-active');
+        }
+
+        // Swatches
+        const swatches = document.querySelectorAll(".tray__swatch");
+
+        for (const swatch of swatches) {
+        swatch.addEventListener('click', selectCarColor);
+        }
+
+        function selectCarColor(e) {
+        let color = colors[parseInt(e.target.dataset.key)];
+        let new_mtl;
+
+        if (color.texture) {
+
+            let txt = new THREE.TextureLoader().load(color.texture);
+
+            txt.repeat.set(color.size[2], color.size[2], color.size[2]);
+            txt.wrapS = THREE.RepeatWrapping;
+            txt.wrapT = THREE.RepeatWrapping;
+
+            new_mtl = new THREE.MeshPhongMaterial({
+            map: txt,
+            shininess: color.shininess ? color.shininess : 30
+            });
+
+        } else {
+            new_mtl = new THREE.MeshPhongMaterial({
+            color: parseInt('0x' + color.color),
+            shininess: color.shininess ? color.shininess : 30
+            });
+        }
+
+        //console.log('activeOption: ' + activeOption + ' ' + color.color)
+        setMaterial(modelCar, activeOption, new_mtl);
+        }
+
+        function setMaterial(parent, type, mtl) {
+        parent.traverse(o => {
+
+            /*if(o.nameID != null){
+            console.log('   <<< o.isMesh: ' + o.isMesh)
+            console.log('   <<< o.nameID: ' + o.nameID)
+            console.log('   <<< type: ' + type)
+            if (o.nameID == type) {
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Se asigna material')
+            console.log('   o.isMesh: ' + o.isMesh)
+            console.log('   o.nameID: ' + o.nameID)
+            console.log('   type: ' + type)
+            o.material = mtl;
+            }else{
+            console.log('<' + o.nameID  + '>,' + '<' + type + '>')
+            }
+        }*/
+
+
+            if (o.isMesh && o.nameID != null) {
+            if (o.nameID == type || 
+                (type == 'rim' && o.nameID.includes('rim')) ||
+                (type == 'wheel' && o.nameID.startsWith('wheel')  && !o.nameID.includes('rim'))){
+                o.material = mtl;
+            }
+            }
+        });
+        }
+
+
+        // Function - Opening rotate
+        let initRotate = 0;
+
+        function initialRotation() {
+        initRotate++;
+        if (initRotate <= 120) {
+            modelCar.rotation.y += Math.PI / 60;
+        } else {
+            loaded = true;
+        }
+        }
+
+        var slider = document.getElementById('js-tray'), sliderItems = document.getElementById('js-tray-slide'), difference;
+
+        function slide(wrapper, items) {
+        var posX1 = 0,
+            posX2 = 0,
+            posInitial,
+            threshold = 20,
+            posFinal,
+            slides = items.getElementsByClassName('tray__swatch');
+
+        // Mouse events
+        items.onmousedown = dragStart;
+
+        // Touch events
+        items.addEventListener('touchstart', dragStart);
+        items.addEventListener('touchend', dragEnd);
+        items.addEventListener('touchmove', dragAction);
+
+
+        function dragStart(e) {
+            e = e || window.event;
+            posInitial = items.offsetLeft;
+            difference = sliderItems.offsetWidth - slider.offsetWidth;
+            difference = difference * -1;
+
+            if (e.type == 'touchstart') {
+            posX1 = e.touches[0].clientX;
+            } else {
+            posX1 = e.clientX;
+            document.onmouseup = dragEnd;
+            document.onmousemove = dragAction;
+            }
+        }
+
+        function dragAction(e) {
+            e = e || window.event;
+
+            if (e.type == 'touchmove') {
+            posX2 = posX1 - e.touches[0].clientX;
+            posX1 = e.touches[0].clientX;
+            } else {
+            posX2 = posX1 - e.clientX;
+            posX1 = e.clientX;
+            }
+
+            if (items.offsetLeft - posX2 <= 0 && items.offsetLeft - posX2 >= difference) {
+            items.style.left = items.offsetLeft - posX2 + "px";
+            }
+        }
+
+        function dragEnd(e) {
+            posFinal = items.offsetLeft;
+            if (posFinal - posInitial < -threshold) {
+
+            } else if (posFinal - posInitial > threshold) {
+
+            } else {
+            items.style.left = posInitial + "px";
+            }
+
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+        }
+
+
+        slide(slider, sliderItems);
+
+    </script>
+</body>
+
+</html>

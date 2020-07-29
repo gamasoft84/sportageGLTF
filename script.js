@@ -86,7 +86,7 @@ const INITIAL_MAP = [
 
 
 // Init the object loader
-var loader = new GLTFLoader();
+var loader = new THREE.GLTFLoader();
 
 loader.load(MODEL_PATH, function (gltf) {
   modelCar = gltf.scene;
@@ -159,7 +159,7 @@ scene.add(dirLight);
 
 
 // Add controls
-var controls = new OrbitControls(camera, renderer.domElement);
+var controls = new THREE.OrbitControls(camera, renderer.domElement);
 //controls.maxPolarAngle = Math.PI / 2;
 //controls.minPolarAngle = Math.PI / 3;
 controls.enableDamping = true;
