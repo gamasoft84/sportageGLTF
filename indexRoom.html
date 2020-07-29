@@ -152,13 +152,16 @@
 
         // Init the renderer
         renderer = new THREE.WebGLRenderer({ container, antialias: true });
+        //renderer.setPixelRatio( window.devicePixelRatio );
         renderer.shadowMap.enabled = true;
-        renderer.toneMappingExposure = 0.1;
+        renderer.toneMappingExposure = 0.2;
         renderer.setAnimationLoop(render);
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.toneMapping = THREE.CineonToneMapping;
         document.body.appendChild(renderer.domElement);
 
-        stats = new Stats();
-        container.appendChild( stats.dom );
+        //stats = new Stats();
+        //container.appendChild( stats.dom );
 
 
         //Enviroment
@@ -545,7 +548,7 @@
             }
             grid.position.z = - (time) % 5;
             renderer.render(scene, camera);
-            stats.update();
+            //stats.update();
         }
 
 
