@@ -30,7 +30,7 @@
         }
 
         .loader {
-            background:url('./img/cargando.gif') no-repeat;
+            background: url('./img/cargando.gif') no-repeat;
             width: 300px;
             height: 300px;
         }
@@ -94,37 +94,37 @@
 
         var loaded = false;
 
-        const colors = [ 
-        {
-            texture: './texture/ironGrey.gif',
-            size: [2, 2, 2],
-            shininess: 60 
-        },
-        {
-            texture: './texture/fieryRed.gif',
-            size: [2, 2, 2],
-            shininess: 60 
-        },
-        {
-            texture: './texture/sparklingSilver.gif',
-            size: [2, 2, 2],
-            shininess: 60 
-        },
-        {
-            texture: './texture/snowWhitePearl.gif',
-            size: [2, 2, 2],
-            shininess: 60 
-        },  
-        {
-            texture: './texture/mercuryBlue.gif',
-            size: [2, 2, 2],
-            shininess: 60 
-        },
-        {
-            texture: './texture/cherryBlack.gif',
-            size: [2, 2, 2],
-            shininess: 60 
-        }
+        const colors = [
+            {
+                texture: './texture/ironGrey.gif',
+                size: [2, 2, 2],
+                shininess: 60
+            },
+            {
+                texture: './texture/fieryRed.gif',
+                size: [2, 2, 2],
+                shininess: 60
+            },
+            {
+                texture: './texture/sparklingSilver.gif',
+                size: [2, 2, 2],
+                shininess: 60
+            },
+            {
+                texture: './texture/snowWhitePearl.gif',
+                size: [2, 2, 2],
+                shininess: 60
+            },
+            {
+                texture: './texture/mercuryBlue.gif',
+                size: [2, 2, 2],
+                shininess: 60
+            },
+            {
+                texture: './texture/cherryBlack.gif',
+                size: [2, 2, 2],
+                shininess: 60
+            }
         ];
 
 
@@ -137,11 +137,11 @@
         scene.background = new THREE.Color(BACKGROUND_COLOR);
         scene.fog = new THREE.Fog(BACKGROUND_COLOR, 1, 4000);
 
-        var grid = new THREE.GridHelper( 100, 40, 0x000000, 0x000000 );
+        var grid = new THREE.GridHelper(100, 40, 0x000000, 0x000000);
         grid.material.opacity = 0.1;
         grid.material.depthWrite = false;
         grid.material.transparent = true;
-        scene.add( grid );
+        scene.add(grid);
 
         const canvas = document.querySelector('#c');
 
@@ -154,31 +154,31 @@
 
         //Enviroment
         var environment = new RoomEnvironment();
-        var pmremGenerator = new THREE.PMREMGenerator( renderer );
-        scene.environment = pmremGenerator.fromScene( environment ).texture;
+        var pmremGenerator = new THREE.PMREMGenerator(renderer);
+        scene.environment = pmremGenerator.fromScene(environment).texture;
 
 
         // Add a camerra
         var cameraFar = 600;
         var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-        camera.position.set( -600, -100, 400 );
+        camera.position.set(-600, -100, 400);
 
 
         // Initial material
-        const INITIAL_MTL = new THREE.MeshPhysicalMaterial({ color: 0xba1c1c, metalness: 0.6, roughness: 0.4, clearcoat: 0.05, clearcoatRoughness: 0.05});
+        const INITIAL_MTL = new THREE.MeshPhysicalMaterial({ color: 0xba1c1c, metalness: 0.6, roughness: 0.4, clearcoat: 0.05, clearcoatRoughness: 0.05 });
         const INITIAL_CALIPER_RIM = new THREE.MeshStandardMaterial({ color: 0x8F8F8F, metalness: 1.0, roughness: 0.5 });
         const INITIAL_CALIPER_MTL = new THREE.MeshStandardMaterial({ color: 0xba1c1c, metalness: 1.0, roughness: 0.5 });
 
         const INITIAL_MAP = [
-        { childID: "object001", mtl: INITIAL_MTL },//body
-        { childID: "wheel001_rim_0", mtl: INITIAL_CALIPER_RIM },//whell
-        { childID: "wheel002_rim_0", mtl: INITIAL_CALIPER_RIM },
-        { childID: "wheel005_rim_0", mtl: INITIAL_CALIPER_RIM },
-        { childID: "wheel007_rim_0", mtl: INITIAL_CALIPER_RIM },
-        { childID: "wheel000", mtl: INITIAL_CALIPER_MTL },//Caliper
-        { childID: "wheel003", mtl: INITIAL_CALIPER_MTL },
-        { childID: "wheel004", mtl: INITIAL_CALIPER_MTL },
-        { childID: "wheel006", mtl: INITIAL_CALIPER_MTL }
+            { childID: "object001", mtl: INITIAL_MTL },//body
+            { childID: "wheel001_rim_0", mtl: INITIAL_CALIPER_RIM },//whell
+            { childID: "wheel002_rim_0", mtl: INITIAL_CALIPER_RIM },
+            { childID: "wheel005_rim_0", mtl: INITIAL_CALIPER_RIM },
+            { childID: "wheel007_rim_0", mtl: INITIAL_CALIPER_RIM },
+            { childID: "wheel000", mtl: INITIAL_CALIPER_MTL },//Caliper
+            { childID: "wheel003", mtl: INITIAL_CALIPER_MTL },
+            { childID: "wheel004", mtl: INITIAL_CALIPER_MTL },
+            { childID: "wheel006", mtl: INITIAL_CALIPER_MTL }
         ];
 
 
@@ -209,7 +209,7 @@
 
             //Delete wheell
             removePart(modelCar, 'wheel007');
-           
+
 
             // Add the model to the scene
             scene.add(modelCar);
@@ -218,21 +218,21 @@
             LOADER.remove();
 
         }, undefined, function (error) {
-        console.error(error);
+            console.error(error);
         });
 
         // Function - Add the textures to the models
         function initColor(parent, type, mtl) {
             parent.traverse(o => {
                 if (o.isMesh) {
-                if (o.name.includes(type)) {
-                    console.log('                       <<<<' + o.name + '>>>>' )
-                    //console.log(o)
-                    o.material = mtl;
-                    o.nameID = type; // Set a new property to identify this object
-                }else{
-                    //console.log('<' + o.name + '>' )
-                }
+                    if (o.name.includes(type)) {
+                        console.log('                       <<<<' + o.name + '>>>>')
+                        //console.log(o)
+                        o.material = mtl;
+                        o.nameID = type; // Set a new property to identify this object
+                    } else {
+                        //console.log('<' + o.name + '>' )
+                    }
                 }
             });
         }
@@ -283,56 +283,56 @@
 
         function animate() {
 
-        controls.update();
-        renderer.render(scene, camera);
-        requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
 
-        if (resizeRendererToDisplaySize(renderer)) {
-            const canvas = renderer.domElement;
-            camera.aspect = canvas.clientWidth / canvas.clientHeight;
-            camera.updateProjectionMatrix();
-        }
+            if (resizeRendererToDisplaySize(renderer)) {
+                const canvas = renderer.domElement;
+                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                camera.updateProjectionMatrix();
+            }
 
-        if (modelCar != null && loaded == false) {
-            initialRotation();
-            DRAG_NOTICE.classList.add('start');
-        }
+            if (modelCar != null && loaded == false) {
+                initialRotation();
+                DRAG_NOTICE.classList.add('start');
+            }
         }
 
         animate();
 
         // Function - New resizing method
         function resizeRendererToDisplaySize(renderer) {
-        const canvas = renderer.domElement;
-        var width = window.innerWidth;
-        var height = window.innerHeight;
-        var canvasPixelWidth = canvas.width / window.devicePixelRatio;
-        var canvasPixelHeight = canvas.height / window.devicePixelRatio;
+            const canvas = renderer.domElement;
+            var width = window.innerWidth;
+            var height = window.innerHeight;
+            var canvasPixelWidth = canvas.width / window.devicePixelRatio;
+            var canvasPixelHeight = canvas.height / window.devicePixelRatio;
 
-        const needResize = canvasPixelWidth !== width || canvasPixelHeight !== height;
-        if (needResize) {
+            const needResize = canvasPixelWidth !== width || canvasPixelHeight !== height;
+            if (needResize) {
 
-            renderer.setSize(width, height, false);
-        }
-        return needResize;
+                renderer.setSize(width, height, false);
+            }
+            return needResize;
         }
 
         // Function - Build Colors
 
         function buildColors(colors) {
-        for (let [i, color] of colors.entries()) {
-            let swatch = document.createElement('div');
-            swatch.classList.add('tray__swatch');
+            for (let [i, color] of colors.entries()) {
+                let swatch = document.createElement('div');
+                swatch.classList.add('tray__swatch');
 
-            if (color.texture) {
-            swatch.style.backgroundImage = "url(" + color.texture + ")";
-            } else {
-            swatch.style.background = "#" + color.color;
+                if (color.texture) {
+                    swatch.style.backgroundImage = "url(" + color.texture + ")";
+                } else {
+                    swatch.style.background = "#" + color.color;
+                }
+
+                swatch.setAttribute('data-key', i);
+                TRAY.append(swatch);
             }
-
-            swatch.setAttribute('data-key', i);
-            TRAY.append(swatch);
-        }
         }
 
         buildColors(colors);
@@ -341,87 +341,87 @@
         const options = document.querySelectorAll(".option");
 
         for (const option of options) {
-        option.addEventListener('click', selectOption);
+            option.addEventListener('click', selectOption);
         }
 
         function selectOption(e) {
-        let option = e.target;
-        activeOption = e.target.dataset.option;
-        for (const otherOption of options) {
-            otherOption.classList.remove('--is-active');
-        }
-        console.info('activeOption: ' + activeOption)
-        option.classList.add('--is-active');
+            let option = e.target;
+            activeOption = e.target.dataset.option;
+            for (const otherOption of options) {
+                otherOption.classList.remove('--is-active');
+            }
+            console.info('activeOption: ' + activeOption)
+            option.classList.add('--is-active');
         }
 
         // Swatches
         const swatches = document.querySelectorAll(".tray__swatch");
 
         for (const swatch of swatches) {
-        swatch.addEventListener('click', selectCarColor);
+            swatch.addEventListener('click', selectCarColor);
         }
 
         function selectCarColor(e) {
-        let color = colors[parseInt(e.target.dataset.key)];
-        let new_mtl;
+            let color = colors[parseInt(e.target.dataset.key)];
+            let new_mtl;
 
-        if (color.texture) {
-            let txt = new THREE.TextureLoader().load(color.texture);
-            txt.repeat.set(color.size[2], color.size[2], color.size[2]);
-            txt.wrapS = THREE.RepeatWrapping;
-            txt.wrapT = THREE.RepeatWrapping;
+            if (color.texture) {
+                let txt = new THREE.TextureLoader().load(color.texture);
+                txt.repeat.set(color.size[2], color.size[2], color.size[2]);
+                txt.wrapS = THREE.RepeatWrapping;
+                txt.wrapT = THREE.RepeatWrapping;
 
-            new_mtl = new THREE.MeshPhysicalMaterial({
-                map: txt,
-                shininess: color.shininess ? color.shininess : 30,
-                metalness: 0.6, 
-                roughness: 0.4, 
-                clearcoat: 0.05, 
-                clearcoatRoughness: 0.05
-            });
+                new_mtl = new THREE.MeshPhysicalMaterial({
+                    map: txt,
+                    shininess: color.shininess ? color.shininess : 30,
+                    metalness: 0.6,
+                    roughness: 0.4,
+                    clearcoat: 0.05,
+                    clearcoatRoughness: 0.05
+                });
 
-        } else {
-            new_mtl = new THREE.MeshPhysicalMaterial({
-                color: parseInt('0x' + color.color),
-                shininess: color.shininess ? color.shininess : 30,
-                metalness: 0.6, 
-                roughness: 0.4, 
-                clearcoat: 0.05, 
-                clearcoatRoughness: 0.05
-            });
-        }
+            } else {
+                new_mtl = new THREE.MeshPhysicalMaterial({
+                    color: parseInt('0x' + color.color),
+                    shininess: color.shininess ? color.shininess : 30,
+                    metalness: 0.6,
+                    roughness: 0.4,
+                    clearcoat: 0.05,
+                    clearcoatRoughness: 0.05
+                });
+            }
 
-        //console.log('activeOption: ' + activeOption + ' ' + color.color)
-        setMaterial(modelCar, activeOption, new_mtl);
+            //console.log('activeOption: ' + activeOption + ' ' + color.color)
+            setMaterial(modelCar, activeOption, new_mtl);
         }
 
         function setMaterial(parent, type, mtl) {
-        parent.traverse(o => {
+            parent.traverse(o => {
 
-            /*if(o.nameID != null){
-            console.log('   <<< o.isMesh: ' + o.isMesh)
-            console.log('   <<< o.nameID: ' + o.nameID)
-            console.log('   <<< type: ' + type)
-            if (o.nameID == type) {
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Se asigna material')
-            console.log('   o.isMesh: ' + o.isMesh)
-            console.log('   o.nameID: ' + o.nameID)
-            console.log('   type: ' + type)
-            o.material = mtl;
-            }else{
-            console.log('<' + o.nameID  + '>,' + '<' + type + '>')
-            }
-        }*/
-
-
-            if (o.isMesh && o.nameID != null) {
-            if (o.nameID == type || 
-                (type == 'rim' && o.nameID.includes('rim')) ||
-                (type == 'wheel' && o.nameID.startsWith('wheel')  && !o.nameID.includes('rim'))){
+                /*if(o.nameID != null){
+                console.log('   <<< o.isMesh: ' + o.isMesh)
+                console.log('   <<< o.nameID: ' + o.nameID)
+                console.log('   <<< type: ' + type)
+                if (o.nameID == type) {
+                console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Se asigna material')
+                console.log('   o.isMesh: ' + o.isMesh)
+                console.log('   o.nameID: ' + o.nameID)
+                console.log('   type: ' + type)
                 o.material = mtl;
-            }
-            }
-        });
+                }else{
+                console.log('<' + o.nameID  + '>,' + '<' + type + '>')
+                }
+            }*/
+
+
+                if (o.isMesh && o.nameID != null) {
+                    if (o.nameID == type ||
+                        (type == 'rim' && o.nameID.includes('rim')) ||
+                        (type == 'wheel' && o.nameID.startsWith('wheel') && !o.nameID.includes('rim'))) {
+                        o.material = mtl;
+                    }
+                }
+            });
         }
 
 
@@ -429,77 +429,77 @@
         let initRotate = 0;
 
         function initialRotation() {
-        initRotate++;
-        if (initRotate <= 120) {
-            modelCar.rotation.y += Math.PI / 60;
-        } else {
-            loaded = true;
-        }
+            initRotate++;
+            if (initRotate <= 120) {
+                modelCar.rotation.y += Math.PI / 60;
+            } else {
+                loaded = true;
+            }
         }
 
         var slider = document.getElementById('js-tray'), sliderItems = document.getElementById('js-tray-slide'), difference;
 
         function slide(wrapper, items) {
-        var posX1 = 0,
-            posX2 = 0,
-            posInitial,
-            threshold = 20,
-            posFinal,
-            slides = items.getElementsByClassName('tray__swatch');
+            var posX1 = 0,
+                posX2 = 0,
+                posInitial,
+                threshold = 20,
+                posFinal,
+                slides = items.getElementsByClassName('tray__swatch');
 
-        // Mouse events
-        items.onmousedown = dragStart;
+            // Mouse events
+            items.onmousedown = dragStart;
 
-        // Touch events
-        items.addEventListener('touchstart', dragStart);
-        items.addEventListener('touchend', dragEnd);
-        items.addEventListener('touchmove', dragAction);
+            // Touch events
+            items.addEventListener('touchstart', dragStart);
+            items.addEventListener('touchend', dragEnd);
+            items.addEventListener('touchmove', dragAction);
 
 
-        function dragStart(e) {
-            e = e || window.event;
-            posInitial = items.offsetLeft;
-            difference = sliderItems.offsetWidth - slider.offsetWidth;
-            difference = difference * -1;
+            function dragStart(e) {
+                e = e || window.event;
+                posInitial = items.offsetLeft;
+                difference = sliderItems.offsetWidth - slider.offsetWidth;
+                difference = difference * -1;
 
-            if (e.type == 'touchstart') {
-            posX1 = e.touches[0].clientX;
-            } else {
-            posX1 = e.clientX;
-            document.onmouseup = dragEnd;
-            document.onmousemove = dragAction;
-            }
-        }
-
-        function dragAction(e) {
-            e = e || window.event;
-
-            if (e.type == 'touchmove') {
-            posX2 = posX1 - e.touches[0].clientX;
-            posX1 = e.touches[0].clientX;
-            } else {
-            posX2 = posX1 - e.clientX;
-            posX1 = e.clientX;
+                if (e.type == 'touchstart') {
+                    posX1 = e.touches[0].clientX;
+                } else {
+                    posX1 = e.clientX;
+                    document.onmouseup = dragEnd;
+                    document.onmousemove = dragAction;
+                }
             }
 
-            if (items.offsetLeft - posX2 <= 0 && items.offsetLeft - posX2 >= difference) {
-            items.style.left = items.offsetLeft - posX2 + "px";
+            function dragAction(e) {
+                e = e || window.event;
+
+                if (e.type == 'touchmove') {
+                    posX2 = posX1 - e.touches[0].clientX;
+                    posX1 = e.touches[0].clientX;
+                } else {
+                    posX2 = posX1 - e.clientX;
+                    posX1 = e.clientX;
+                }
+
+                if (items.offsetLeft - posX2 <= 0 && items.offsetLeft - posX2 >= difference) {
+                    items.style.left = items.offsetLeft - posX2 + "px";
+                }
             }
-        }
 
-        function dragEnd(e) {
-            posFinal = items.offsetLeft;
-            if (posFinal - posInitial < -threshold) {
+            function dragEnd(e) {
+                posFinal = items.offsetLeft;
+                if (posFinal - posInitial < -threshold) {
 
-            } else if (posFinal - posInitial > threshold) {
+                } else if (posFinal - posInitial > threshold) {
 
-            } else {
-            items.style.left = posInitial + "px";
+                } else {
+                    items.style.left = posInitial + "px";
+                }
+
+                document.onmouseup = null;
+                document.onmousemove = null;
             }
-
-            document.onmouseup = null;
-            document.onmousemove = null;
-        }
         }
 
 
