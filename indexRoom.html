@@ -56,8 +56,8 @@
             <img src="./img/caliper.png" alt="" />
         </div>
     </div>
-    <!-- The canvas element is used to draw the 3D scene -->
-    <canvas id="c"></canvas>
+    <!-- The container element is used to draw the 3D scene -->
+    <container id="c"></container>
     <div class="controls">
         <div class="info">
             <div class="info__message">
@@ -75,6 +75,7 @@
     <script type="module" defer>
 
         import * as THREE from './js/model3D/three.module.js';
+        import Stats from './js/model3D/stats.module.js';
         import { OrbitControls } from './js/model3D/OrbitControls.js';
         import { RoomEnvironment } from './js/model3D/RoomEnvironment.js';
 
@@ -93,6 +94,8 @@
         var activeOption = 'object001';
 
         var loaded = false;
+
+        var stats, wheels = [];
 
         const colors = [
             {
@@ -143,13 +146,17 @@
         grid.material.transparent = true;
         scene.add(grid);
 
-        const canvas = document.querySelector('#c');
+        const container = document.querySelector('#c');
 
         // Init the renderer
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        const renderer = new THREE.WebGLRenderer({ container, antialias: true });
         renderer.shadowMap.enabled = true;
         renderer.toneMappingExposure = 0.1;
+        renderer.setAnimationLoop(render);
         document.body.appendChild(renderer.domElement);
+
+        stats = new Stats();
+        container.appendChild( stats.dom );
 
 
         //Enviroment
@@ -210,6 +217,9 @@
             //Delete wheell
             //removePart(carModel, 'wheel007');
 
+            // Add wheels
+            addWheels(carModel, '_rim');
+
 
             // Add the model to the scene
             scene.add(carModel);
@@ -217,16 +227,19 @@
             // Remove the loader
             LOADER.remove();
 
+
+
             // shadow
+            var shadow = new THREE.TextureLoader().load( './img/shadow_ao.png' );
             var mesh = new THREE.Mesh(
-                new THREE.PlaneBufferGeometry( 0.655 * 4, 1.3 * 4 ),
-                new THREE.MeshBasicMaterial( {
+                new THREE.PlaneBufferGeometry(0.655 * 4, 1.3 * 4),
+                new THREE.MeshBasicMaterial({
                     map: shadow, blending: THREE.MultiplyBlending, toneMapped: false, transparent: true
-                } )
+                })
             );
             mesh.rotation.x = - Math.PI / 2;
             mesh.renderOrder = 2;
-            carModel.add( mesh );
+            carModel.add(mesh);
 
         }, undefined, function (error) {
             console.error(error);
@@ -254,6 +267,15 @@
             parent.traverse(o => {
                 if (o.isMesh && o.name.includes(part)) {
                     o.visible = false;
+                }
+            });
+        }
+
+        // Function - Add wheels
+        function addWheels(parent, part) {
+            parent.traverse(o => {
+                if (o.isMesh && o.name.includes(part)) {
+                    wheels.push(o);
                 }
             });
         }
@@ -299,8 +321,8 @@
             requestAnimationFrame(animate);
 
             if (resizeRendererToDisplaySize(renderer)) {
-                const canvas = renderer.domElement;
-                camera.aspect = canvas.clientWidth / canvas.clientHeight;
+                const container = renderer.domElement;
+                camera.aspect = container.clientWidth / container.clientHeight;
                 camera.updateProjectionMatrix();
             }
 
@@ -314,13 +336,13 @@
 
         // Function - New resizing method
         function resizeRendererToDisplaySize(renderer) {
-            const canvas = renderer.domElement;
+            const container = renderer.domElement;
             var width = window.innerWidth;
             var height = window.innerHeight;
-            var canvasPixelWidth = canvas.width / window.devicePixelRatio;
-            var canvasPixelHeight = canvas.height / window.devicePixelRatio;
+            var containerPixelWidth = container.width / window.devicePixelRatio;
+            var containerPixelHeight = container.height / window.devicePixelRatio;
 
-            const needResize = canvasPixelWidth !== width || canvasPixelHeight !== height;
+            const needResize = containerPixelWidth !== width || containerPixelHeight !== height;
             if (needResize) {
 
                 renderer.setSize(width, height, false);
@@ -511,6 +533,17 @@
                 document.onmouseup = null;
                 document.onmousemove = null;
             }
+        }
+
+        function render() {
+            var time =  performance.now() / 1000;
+
+            for (var i = 0; i < wheels.length; i++) {
+                wheels[i].rotation.x = time * Math.PI;
+            }
+            grid.position.z = - (time) % 5;
+            renderer.render(scene, camera);
+            stats.update();
         }
 
 
