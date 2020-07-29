@@ -86,7 +86,7 @@
         const TRAY = document.getElementById('js-tray-slide');
         const DRAG_NOTICE = document.getElementById('js-drag-notice');
 
-        var modelCar;
+        var carModel;
 
         const MODEL_PATH = "sportage.glb";
 
@@ -166,15 +166,15 @@
 
         // Initial material
         const INITIAL_MTL = new THREE.MeshPhysicalMaterial({ color: 0xba1c1c, metalness: 0.6, roughness: 0.4, clearcoat: 0.05, clearcoatRoughness: 0.05 });
-        const INITIAL_CALIPER_RIM = new THREE.MeshStandardMaterial({ color: 0x8F8F8F, metalness: 1.0, roughness: 0.5 });
+        const INITIAL_RIM = new THREE.MeshStandardMaterial({ color: 0xE2E2E2, metalness: 1.0, roughness: 0.5 });
         const INITIAL_CALIPER_MTL = new THREE.MeshStandardMaterial({ color: 0xba1c1c, metalness: 1.0, roughness: 0.5 });
 
         const INITIAL_MAP = [
             { childID: "object001", mtl: INITIAL_MTL },//body
-            { childID: "wheel001_rim_0", mtl: INITIAL_CALIPER_RIM },//whell
-            { childID: "wheel002_rim_0", mtl: INITIAL_CALIPER_RIM },
-            { childID: "wheel005_rim_0", mtl: INITIAL_CALIPER_RIM },
-            { childID: "wheel007_rim_0", mtl: INITIAL_CALIPER_RIM },
+            { childID: "wheel001_rim_0", mtl: INITIAL_RIM },//whell
+            { childID: "wheel002_rim_0", mtl: INITIAL_RIM },
+            { childID: "wheel005_rim_0", mtl: INITIAL_RIM },
+            { childID: "wheel007_rim_0", mtl: INITIAL_RIM },
             { childID: "wheel000", mtl: INITIAL_CALIPER_MTL },//Caliper
             { childID: "wheel003", mtl: INITIAL_CALIPER_MTL },
             { childID: "wheel004", mtl: INITIAL_CALIPER_MTL },
@@ -186,9 +186,9 @@
         var loader = new GLTFLoader();
 
         loader.load(MODEL_PATH, function (gltf) {
-            modelCar = gltf.scene;
+            carModel = gltf.scene;
 
-            modelCar.traverse(o => {
+            carModel.traverse(o => {
                 if (o.isMesh) {
                     o.castShadow = true;
                     o.receiveShadow = true;
@@ -196,26 +196,37 @@
             });
 
             // Set the models initial scale   
-            modelCar.scale.set(2, 2, 2);
-            modelCar.rotation.y = Math.PI;
+            carModel.scale.set(2, 2, 2);
+            carModel.rotation.y = Math.PI;
 
             // Offset the y position a bit
-            modelCar.position.y = -1;
+            carModel.position.y = -1;
 
             // Set initial textures
             for (let object of INITIAL_MAP) {
-                initColor(modelCar, object.childID, object.mtl);
+                initColor(carModel, object.childID, object.mtl);
             }
 
             //Delete wheell
-            removePart(modelCar, 'wheel007');
+            //removePart(carModel, 'wheel007');
 
 
             // Add the model to the scene
-            scene.add(modelCar);
+            scene.add(carModel);
 
             // Remove the loader
             LOADER.remove();
+
+            // shadow
+            var mesh = new THREE.Mesh(
+                new THREE.PlaneBufferGeometry( 0.655 * 4, 1.3 * 4 ),
+                new THREE.MeshBasicMaterial( {
+                    map: shadow, blending: THREE.MultiplyBlending, toneMapped: false, transparent: true
+                } )
+            );
+            mesh.rotation.x = - Math.PI / 2;
+            mesh.renderOrder = 2;
+            carModel.add( mesh );
 
         }, undefined, function (error) {
             console.error(error);
@@ -293,7 +304,7 @@
                 camera.updateProjectionMatrix();
             }
 
-            if (modelCar != null && loaded == false) {
+            if (carModel != null && loaded == false) {
                 initialRotation();
                 DRAG_NOTICE.classList.add('start');
             }
@@ -392,7 +403,7 @@
             }
 
             //console.log('activeOption: ' + activeOption + ' ' + color.color)
-            setMaterial(modelCar, activeOption, new_mtl);
+            setMaterial(carModel, activeOption, new_mtl);
         }
 
         function setMaterial(parent, type, mtl) {
@@ -431,7 +442,7 @@
         function initialRotation() {
             initRotate++;
             if (initRotate <= 120) {
-                modelCar.rotation.y += Math.PI / 60;
+                carModel.rotation.y += Math.PI / 60;
             } else {
                 loaded = true;
             }
