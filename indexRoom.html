@@ -57,7 +57,7 @@
         </div>
     </div>
     <!-- The container element is used to draw the 3D scene -->
-    <container id="c"></container>
+    <canvas id="c"></canvas>
     <div class="controls">
         <div class="info">
             <div class="info__message">
@@ -142,10 +142,10 @@
         scene.background = new THREE.Color(BACKGROUND_COLOR);
         scene.fog = new THREE.Fog(BACKGROUND_COLOR, 1, 4000);
 
-        const container = document.querySelector('#c');
+        const canvas = document.querySelector('#c');
 
         // Init the renderer
-        renderer = new THREE.WebGLRenderer({ container, antialias: true });
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
         //renderer.setPixelRatio( window.devicePixelRatio );
         renderer.shadowMap.enabled = true;
         renderer.toneMappingExposure = 0.2;
@@ -162,7 +162,7 @@
         scene.add(grid);
 
         //stats = new Stats();
-        //container.appendChild( stats.dom );
+        //canvas.appendChild( stats.dom );
 
 
         //Enviroment
