@@ -95,7 +95,9 @@
 
         var loaded = false;
 
-        var stats, wheels = [];
+        var grid, stats, wheels = [];
+
+        var renderer;
 
         const colors = [
             {
@@ -140,7 +142,7 @@
         scene.background = new THREE.Color(BACKGROUND_COLOR);
         scene.fog = new THREE.Fog(BACKGROUND_COLOR, 1, 4000);
 
-        var grid = new THREE.GridHelper(100, 40, 0x000000, 0x000000);
+        grid = new THREE.GridHelper(100, 40, 0x000000, 0x000000);
         grid.material.opacity = 0.1;
         grid.material.depthWrite = false;
         grid.material.transparent = true;
@@ -149,7 +151,7 @@
         const container = document.querySelector('#c');
 
         // Init the renderer
-        const renderer = new THREE.WebGLRenderer({ container, antialias: true });
+        renderer = new THREE.WebGLRenderer({ container, antialias: true });
         renderer.shadowMap.enabled = true;
         renderer.toneMappingExposure = 0.1;
         renderer.setAnimationLoop(render);
@@ -311,7 +313,7 @@
         controls.enableDamping = true;
         controls.enablePan = false;
         controls.dampingFactor = 0.1;
-        controls.autoRotate = true; // Toggle this if you'd like the model to automatically rotate
+        controls.autoRotate = false; // Toggle this if you'd like the model to automatically rotate
         controls.autoRotateSpeed = 1; // 30
 
         function animate() {
@@ -536,7 +538,7 @@
         }
 
         function render() {
-            var time =  performance.now() / 1000;
+            var time =  - performance.now() / 1000;
 
             for (var i = 0; i < wheels.length; i++) {
                 wheels[i].rotation.x = time * Math.PI;
