@@ -130,21 +130,25 @@
 
 
 
-        const BACKGROUND_COLOR = 0xffffff;
+        const BACKGROUND_COLOR = 0xeeeeee;
         // Init the scene
         const scene = new THREE.Scene();
         // Set background
         scene.background = new THREE.Color(BACKGROUND_COLOR);
         scene.fog = new THREE.Fog(BACKGROUND_COLOR, 1, 4000);
 
-
+        var grid = new THREE.GridHelper( 100, 40, 0x000000, 0x000000 );
+        grid.material.opacity = 0.1;
+        grid.material.depthWrite = false;
+        grid.material.transparent = true;
+        scene.add( grid );
 
         const canvas = document.querySelector('#c');
 
         // Init the renderer
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
         renderer.shadowMap.enabled = true;
-        renderer.toneMappingExposure = 0.99;
+        renderer.toneMappingExposure = 0.65;
         document.body.appendChild(renderer.domElement);
 
 
@@ -161,15 +165,16 @@
 
 
         // Initial material
-        const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 30 });
-        const INITIAL_CALIPER_MTL = new THREE.MeshPhongMaterial({ color: 0xba1c1c, shininess: 30 });
+        const INITIAL_MTL = new THREE.MeshPhysicalMaterial({ color: 0xba1c1c, metalness: 0.6, roughness: 0.4, clearcoat: 0.05, clearcoatRoughness: 0.05});
+        const INITIAL_CALIPER_RIM = new THREE.MeshStandardMaterial({ color: 0x8F8F8F, metalness: 1.0, roughness: 0.5 });
+        const INITIAL_CALIPER_MTL = new THREE.MeshStandardMaterial({ color: 0xba1c1c, metalness: 1.0, roughness: 0.5 });
 
         const INITIAL_MAP = [
         { childID: "object001", mtl: INITIAL_MTL },//body
-        { childID: "wheel001_rim_0", mtl: INITIAL_MTL },//whell
-        { childID: "wheel002_rim_0", mtl: INITIAL_MTL },
-        { childID: "wheel005_rim_0", mtl: INITIAL_MTL },
-        { childID: "wheel007_rim_0", mtl: INITIAL_MTL },
+        { childID: "wheel001_rim_0", mtl: INITIAL_CALIPER_RIM },//whell
+        { childID: "wheel002_rim_0", mtl: INITIAL_CALIPER_RIM },
+        { childID: "wheel005_rim_0", mtl: INITIAL_CALIPER_RIM },
+        { childID: "wheel007_rim_0", mtl: INITIAL_CALIPER_RIM },
         { childID: "wheel000", mtl: INITIAL_CALIPER_MTL },//Caliper
         { childID: "wheel003", mtl: INITIAL_CALIPER_MTL },
         { childID: "wheel004", mtl: INITIAL_CALIPER_MTL },
@@ -219,7 +224,7 @@
             if (o.name.includes(type)) {
                 console.log('                       <<<<' + o.name + '>>>>' )
                 //console.log(o)
-            // o.material = mtl;
+                o.material = mtl;
                 o.nameID = type; // Set a new property to identify this object
             }else{
                 //console.log('<' + o.name + '>' )
@@ -232,14 +237,14 @@
         var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.61);
         hemiLight.position.set(10, 10, 0);
         // Add hemisphere light to scene   
-        scene.add(hemiLight);
+        //scene.add(hemiLight);
 
         var dirLight = new THREE.DirectionalLight(0xffffff, 0.54);
         dirLight.position.set(10, 0, 0);
         dirLight.castShadow = false;
         dirLight.shadow.mapSize = new THREE.Vector2(1024, 1024);
         // Add directional Light to scene    
-        scene.add(dirLight);
+        //scene.add(dirLight);
 
 
         var dirLight2 = new THREE.DirectionalLight(0xffffff, 0.54);
@@ -247,7 +252,7 @@
         dirLight2.castShadow = false;
         dirLight2.shadow.mapSize = new THREE.Vector2(1024, 1024);
         // Add directional Light to scene    
-        scene.add(dirLight);
+        //scene.add(dirLight);
 
 
         // Add controls
@@ -345,22 +350,28 @@
         let new_mtl;
 
         if (color.texture) {
-
             let txt = new THREE.TextureLoader().load(color.texture);
-
             txt.repeat.set(color.size[2], color.size[2], color.size[2]);
             txt.wrapS = THREE.RepeatWrapping;
             txt.wrapT = THREE.RepeatWrapping;
 
-            new_mtl = new THREE.MeshPhongMaterial({
-            map: txt,
-            shininess: color.shininess ? color.shininess : 30
+            new_mtl = new THREE.MeshPhysicalMaterial({
+                map: txt,
+                shininess: color.shininess ? color.shininess : 30,
+                metalness: 0.6, 
+                roughness: 0.4, 
+                clearcoat: 0.05, 
+                clearcoatRoughness: 0.05
             });
 
         } else {
-            new_mtl = new THREE.MeshPhongMaterial({
-            color: parseInt('0x' + color.color),
-            shininess: color.shininess ? color.shininess : 30
+            new_mtl = new THREE.MeshPhysicalMaterial({
+                color: parseInt('0x' + color.color),
+                shininess: color.shininess ? color.shininess : 30,
+                metalness: 0.6, 
+                roughness: 0.4, 
+                clearcoat: 0.05, 
+                clearcoatRoughness: 0.05
             });
         }
 
