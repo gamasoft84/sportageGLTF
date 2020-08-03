@@ -67,17 +67,17 @@ html {
 
 .options {
     position: absolute;
-    left: 0;
+    left: 3px;
 }
 
 .option {
     background-size: cover;
     background-position: 50%;
-    background-color: white;
+    background-color: transparent;
     margin-bottom: 3px;
     padding: 10px;
-    height: 105px;
-    width: 165px;
+    height: 75px;
+    width: 85px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,12 +86,12 @@ html {
 
 .option:hover {
     border-left: 5px solid white;
-    width: 168px;
+    width: 88px;
 }
 
 .option.--is-active {
-    border-right: 3px solid red;
-    width: 168px;
+    border-left: 3px solid red;
+    width: 88px;
     cursor: default;
 }
 
